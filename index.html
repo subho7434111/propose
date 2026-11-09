@@ -1,0 +1,835 @@
+<!DOCTYPE html>
+<html lang="bn">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>⚠️ CRITICAL LOVE ALERT: Decision Required! 💖</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Bungee&family=Plus+Jakarta+Sans:wght@400;700;800;900&family=Share+Tech+Mono&display=swap" rel="stylesheet">
+
+  <!-- Canvas Confetti -->
+  <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.6.0/dist/confetti.browser.min.js"></script>
+
+  <style>
+    :root {
+      --neon-pink: #ff007f;
+      --neon-purple: #b5179e;
+      --neon-cyan: #00f0ff;
+      --neon-yellow: #ffee00;
+      --bg-dark: #07010f;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+      -webkit-tap-highlight-color: transparent;
+    }
+
+    body {
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: var(--bg-dark);
+      font-family: 'Plus Jakarta Sans', sans-serif;
+      overflow: hidden;
+      position: relative;
+      color: #fff;
+      perspective: 1000px;
+    }
+
+    /* Screen Shake Animation on Panic */
+    .screen-shake {
+      animation: hardShake 0.4s cubic-bezier(.36,.07,.19,.97) both;
+    }
+
+    @keyframes hardShake {
+      10%, 90% { transform: translate3d(-3px, 0, 0) rotate(-1deg); }
+      20%, 80% { transform: translate3d(5px, 0, 0) rotate(1.5deg); }
+      30%, 50%, 70% { transform: translate3d(-8px, -4px, 0) rotate(-2deg); }
+      40%, 60% { transform: translate3d(8px, 4px, 0) rotate(2deg); }
+    }
+
+    /* Animated Cyberpunk Grid Floor */
+    .cyber-grid {
+      position: fixed;
+      bottom: -30%;
+      left: -50%;
+      width: 200%;
+      height: 100%;
+      background-image: 
+        linear-gradient(rgba(255, 0, 127, 0.25) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0, 240, 255, 0.2) 1px, transparent 1px);
+      background-size: 50px 50px;
+      transform: rotateX(75deg);
+      animation: gridScroll 15s linear infinite;
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    @keyframes gridScroll {
+      0% { transform: rotateX(75deg) translateY(0); }
+      100% { transform: rotateX(75deg) translateY(50px); }
+    }
+
+    /* Floating Heart Cursor Trail */
+    .heart-trail {
+      position: fixed;
+      pointer-events: none;
+      font-size: 22px;
+      z-index: 9999;
+      animation: trailFade 1s forwards ease-out;
+      transform: translate(-50%, -50%);
+    }
+
+    @keyframes trailFade {
+      0% { opacity: 1; transform: translate(-50%, -50%) scale(1) rotate(0deg); }
+      100% { opacity: 0; transform: translate(-50%, -90px) scale(2.2) rotate(45deg); }
+    }
+
+    /* Warning Siren Header */
+    .emergency-banner {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      background: linear-gradient(90deg, #ff0055, #ff00aa, #ff0055);
+      color: #fff;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.82rem;
+      padding: 7px 10px;
+      text-align: center;
+      letter-spacing: 2px;
+      font-weight: bold;
+      z-index: 50;
+      box-shadow: 0 0 25px rgba(255, 0, 85, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 8px;
+    }
+
+    /* Floating Romantic Music Player Pill */
+    .music-widget {
+      position: fixed;
+      top: 45px;
+      right: 20px;
+      background: rgba(22, 10, 36, 0.85);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255, 0, 127, 0.5);
+      box-shadow: 0 0 20px rgba(255, 0, 127, 0.35);
+      border-radius: 30px;
+      padding: 7px 16px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      z-index: 100;
+      cursor: pointer;
+      transition: all 0.25s ease;
+    }
+
+    .music-widget:hover {
+      transform: scale(1.06);
+      border-color: var(--neon-cyan);
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.45);
+    }
+
+    .equalizer {
+      display: flex;
+      align-items: flex-end;
+      gap: 2px;
+      height: 16px;
+    }
+
+    .equalizer-bar {
+      width: 3px;
+      background: var(--neon-pink);
+      border-radius: 2px;
+      height: 4px;
+      transition: height 0.2s ease;
+    }
+
+    .playing .equalizer-bar:nth-child(1) { animation: eqJump 0.8s infinite alternate ease-in-out; }
+    .playing .equalizer-bar:nth-child(2) { animation: eqJump 0.5s infinite alternate ease-in-out 0.2s; }
+    .playing .equalizer-bar:nth-child(3) { animation: eqJump 0.9s infinite alternate ease-in-out 0.1s; }
+    .playing .equalizer-bar:nth-child(4) { animation: eqJump 0.6s infinite alternate ease-in-out 0.3s; }
+
+    @keyframes eqJump {
+      0% { height: 4px; background: var(--neon-pink); }
+      100% { height: 16px; background: var(--neon-cyan); }
+    }
+
+    .music-text {
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #fff;
+      letter-spacing: 0.5px;
+    }
+
+    /* Main Futuristic Crazy Container */
+    .crazy-card {
+      position: relative;
+      z-index: 10;
+      width: 92%;
+      max-width: 520px;
+      background: rgba(18, 6, 32, 0.85);
+      backdrop-filter: blur(20px);
+      -webkit-backdrop-filter: blur(20px);
+      border-radius: 36px;
+      padding: 42px 30px;
+      border: 2px solid rgba(255, 0, 127, 0.45);
+      box-shadow: 0 0 50px rgba(255, 0, 127, 0.35),
+                  0 0 100px rgba(0, 240, 255, 0.15),
+                  inset 0 0 25px rgba(255, 0, 127, 0.2);
+      text-align: center;
+      transition: all 0.3s ease;
+    }
+
+    /* Cat/Heart Avatar Reaction */
+    .avatar-box {
+      font-size: 5rem;
+      display: inline-block;
+      margin-bottom: 12px;
+      filter: drop-shadow(0 0 20px var(--neon-pink));
+      transition: transform 0.25s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+    }
+
+    /* Love Meter Bar */
+    .love-meter-wrapper {
+      background: rgba(255, 255, 255, 0.08);
+      border-radius: 20px;
+      height: 24px;
+      border: 1px solid rgba(255, 255, 255, 0.2);
+      overflow: hidden;
+      margin: 18px 0 24px 0;
+      position: relative;
+    }
+
+    .love-meter-fill {
+      height: 100%;
+      width: 99%;
+      background: linear-gradient(90deg, #ff007f, #00f0ff, #ffee00);
+      background-size: 200% 100%;
+      animation: gradientShift 2s linear infinite;
+      border-radius: 20px;
+      transition: width 0.4s ease;
+    }
+
+    @keyframes gradientShift {
+      0% { background-position: 0% 50%; }
+      100% { background-position: 200% 50%; }
+    }
+
+    .love-meter-text {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 0.75rem;
+      font-weight: 800;
+      font-family: 'Share Tech Mono', monospace;
+      color: #fff;
+      text-shadow: 0 1px 4px #000;
+      white-space: nowrap;
+    }
+
+    h1 {
+      font-family: 'Bungee', cursive;
+      font-size: 1.85rem;
+      letter-spacing: 1px;
+      background: linear-gradient(135deg, #fff, #ff70a6 40%, var(--neon-cyan) 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+      line-height: 1.3;
+    }
+
+    .crazy-subtitle {
+      font-size: 1.05rem;
+      color: rgba(255, 255, 255, 0.85);
+      font-weight: 400;
+      line-height: 1.6;
+    }
+
+    /* Button Battlefield */
+    .btn-battlefield {
+      position: relative;
+      min-height: 100px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 20px;
+      margin-top: 25px;
+    }
+
+    .crazy-btn {
+      padding: 16px 36px;
+      font-size: 1.25rem;
+      font-weight: 900;
+      border-radius: 50px;
+      border: none;
+      cursor: pointer;
+      user-select: none;
+      transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      position: relative;
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    /* The Ever-Growing YES Button */
+    #yesBtn {
+      background: linear-gradient(135deg, #ff007f, #ff0055 50%, #ff5400);
+      color: #fff;
+      box-shadow: 0 0 35px rgba(255, 0, 127, 0.7),
+                  inset 0 0 15px rgba(255, 255, 255, 0.5);
+      z-index: 25;
+      animation: heartbeat 1.5s ease-in-out infinite;
+    }
+
+    @keyframes heartbeat {
+      0%, 100% { transform: scale(var(--yes-scale, 1)); }
+      50% { transform: scale(calc(var(--yes-scale, 1) * 1.08)); }
+    }
+
+    /* The Uncatchable Running NO Button */
+    #noBtn {
+      background: rgba(255, 255, 255, 0.1);
+      color: rgba(255, 255, 255, 0.8);
+      border: 2px dashed rgba(255, 0, 85, 0.5);
+      backdrop-filter: blur(10px);
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
+      position: absolute;
+      z-index: 30;
+      transition: transform 0.15s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    /* Popup Roasts when NO is chased */
+    .roast-toast {
+      position: fixed;
+      top: 85px;
+      left: 50%;
+      transform: translateX(-50%) translateY(-100px);
+      background: linear-gradient(135deg, #ff0055, #7209b7);
+      color: white;
+      font-weight: 800;
+      font-size: 1.05rem;
+      padding: 12px 28px;
+      border-radius: 50px;
+      box-shadow: 0 15px 35px rgba(255, 0, 85, 0.6);
+      border: 2px solid #fff;
+      z-index: 1000;
+      opacity: 0;
+      transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      pointer-events: none;
+      white-space: nowrap;
+    }
+
+    .roast-toast.active {
+      transform: translateX(-50%) translateY(0);
+      opacity: 1;
+    }
+
+    /* CELEBRATION DISCO SCREEN */
+    .victory-box {
+      display: none;
+      animation: victoryPop 0.7s cubic-bezier(0.175, 0.885, 0.32, 1.275) forwards;
+    }
+
+    @keyframes victoryPop {
+      0% { opacity: 0; transform: scale(0.6) rotate(-5deg); }
+      100% { opacity: 1; transform: scale(1) rotate(0deg); }
+    }
+
+    .victory-badge {
+      font-size: 5rem;
+      animation: spinBounce 2s infinite ease-in-out;
+    }
+
+    @keyframes spinBounce {
+      0%, 100% { transform: translateY(0) rotate(0deg); }
+      25% { transform: translateY(-15px) rotate(-10deg); }
+      75% { transform: translateY(-5px) rotate(10deg); }
+    }
+
+    /* Contract of Love */
+    .contract-box {
+      background: rgba(0, 0, 0, 0.45);
+      border: 2px solid var(--neon-cyan);
+      border-radius: 20px;
+      padding: 22px;
+      margin-top: 22px;
+      text-align: left;
+      font-family: 'Share Tech Mono', monospace;
+      font-size: 0.9rem;
+      line-height: 1.7;
+      box-shadow: 0 0 25px rgba(0, 240, 255, 0.25);
+    }
+
+    .contract-title {
+      color: var(--neon-cyan);
+      font-weight: bold;
+      text-align: center;
+      font-size: 1rem;
+      margin-bottom: 10px;
+      text-transform: uppercase;
+    }
+
+    .contract-clause {
+      color: rgba(255, 255, 255, 0.9);
+      margin: 6px 0;
+    }
+
+    .contract-clause span {
+      color: var(--neon-yellow);
+    }
+
+    .live-timer-badge {
+      margin-top: 15px;
+      padding: 10px;
+      border-radius: 12px;
+      background: rgba(255, 0, 127, 0.2);
+      border: 1px solid var(--neon-pink);
+      text-align: center;
+      color: #fff;
+      font-size: 0.95rem;
+    }
+
+    .whatsapp-btn {
+      margin-top: 24px;
+      width: 100%;
+      background: linear-gradient(135deg, #25D366, #128C7E);
+      color: #fff;
+      text-decoration: none;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 12px;
+      padding: 16px;
+      border-radius: 50px;
+      font-weight: 900;
+      font-size: 1.15rem;
+      box-shadow: 0 10px 30px rgba(37, 211, 102, 0.4);
+      transition: transform 0.2s;
+    }
+
+    .whatsapp-btn:hover {
+      transform: scale(1.04);
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Audio Element: Popular Romantic Hindi Song (Kesariya / Tum Hi Ho Vibe) -->
+  <audio id="hindiSong" loop preload="auto">
+    <!-- Local file support: If user places 'song.mp3' in the same folder -->
+    <source src="song.mp3" type="audio/mpeg">
+    <!-- Direct High-Quality Online Hindi Romantic Stream (Tum Hi Ho Acoustic / Romantic Melody) -->
+    <source src="https://ia801503.us.archive.org/15/items/TumHiHoAashiqui2128Kbps_201610/Tum%20Hi%20Ho%20-%20Aashiqui%202%20-%20128Kbps.mp3" type="audio/mpeg">
+    <source src="https://cdn.pixabay.com/download/audio/2022/05/27/audio_1808fbf07a.mp3?filename=romantic-piano-112199.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Emergency Cyber Banner -->
+  <div class="emergency-banner">
+    <span>🚨 CRITICAL SYSTEM NOTICE:</span>
+    <span>A HEART HAS BEEN HACKED BY YOU!</span>
+    <span>🚨</span>
+  </div>
+
+  <!-- Music Pill Control -->
+  <div class="music-widget" id="musicWidget" onclick="toggleMusic()">
+    <div class="equalizer" id="equalizer">
+      <div class="equalizer-bar"></div>
+      <div class="equalizer-bar"></div>
+      <div class="equalizer-bar"></div>
+      <div class="equalizer-bar"></div>
+    </div>
+    <span class="music-text" id="musicStatus">🎵 Hindi Song: Tap to Play</span>
+  </div>
+
+  <!-- Cyber Grid Floor -->
+  <div class="cyber-grid"></div>
+
+  <!-- Roast Toast Popup -->
+  <div class="roast-toast" id="roastToast">Nice try! But NO doesn't exist! 😂</div>
+
+  <!-- Main Crazy Box -->
+  <div class="crazy-card" id="mainContainer">
+    
+    <!-- QUESTION PHASE -->
+    <div id="askView">
+      <div class="avatar-box" id="avatarEmoji">🥺👉👈</div>
+      
+      <h1>WILL YOU BE MINE?</h1>
+      <p class="crazy-subtitle">
+        আমার হার্টব্রেক রেট এখন <b>999.9%</b>! এই সিস্টেম একমাত্র তোমার একটি 'YES' ক্লিকেই নরমাল হবে!
+      </p>
+
+      <!-- Love Meter -->
+      <div class="love-meter-wrapper">
+        <div class="love-meter-fill" id="meterFill"></div>
+        <div class="love-meter-text" id="meterText">LOVE CAPACITY: 99.9% OVERLOAD</div>
+      </div>
+
+      <!-- Action Arena -->
+      <div class="btn-battlefield" id="battlefield">
+        <button class="crazy-btn" id="yesBtn" onclick="triggerCrazyCelebration()">YES! 😍💍</button>
+        <button class="crazy-btn" id="noBtn">NO ❌</button>
+      </div>
+    </div>
+
+    <!-- CRAZY VICTORY PHASE -->
+    <div class="victory-box" id="victoryView">
+      <div class="victory-badge">🥳💍💥</div>
+      <h1 style="color: var(--neon-yellow); -webkit-text-fill-color: initial; text-shadow: 0 0 25px #ffee00;">
+        MISSION ACCOMPLISHED!
+      </h1>
+      <p style="font-size: 1.1rem; color: #fff; font-weight: 600;">
+        You just officially unlocked the Premium Lifetime Subscription to my Heart! 🥰
+      </p>
+
+      <!-- Legally Binding Crazy Love Contract -->
+      <div class="contract-box">
+        <div class="contract-title">📜 OFFICIAL PARTNERSHIP CONTRACT</div>
+        <div class="contract-clause">✦ <span>Clause 1:</span> Unlimited hugs & forehead kisses are mandatory.</div>
+        <div class="contract-clause">✦ <span>Clause 2:</span> Stealing food/fries from my plate is 100% permitted.</div>
+        <div class="contract-clause">✦ <span>Clause 3:</span> Late night random cravings will be fulfilled.</div>
+        <div class="contract-clause">✦ <span>Clause 4:</span> <b>NO REFUNDS OR RETURNS ALLOWED FOREVER!</b></div>
+        
+        <div class="live-timer-badge" id="loveTimer">
+          ⏱️ Officially Mine Since: <b>0s</b>
+        </div>
+      </div>
+
+      <a id="waSendBtn" href="#" target="_blank" class="whatsapp-btn">
+        <span>📲 Send Confirmation on WhatsApp</span>
+      </a>
+    </div>
+
+  </div>
+
+  <script>
+    /* ========================================================
+       1. HINDI BACKGROUND SONG CONTROLLER
+       ======================================================== */
+    const audio = document.getElementById('hindiSong');
+    const musicWidget = document.getElementById('musicWidget');
+    const musicStatus = document.getElementById('musicStatus');
+    let isPlaying = false;
+
+    function playMusic() {
+      audio.volume = 0.8;
+      audio.play().then(() => {
+        isPlaying = true;
+        musicWidget.classList.add('playing');
+        musicStatus.innerText = "🎶 Tum Hi Ho (Playing...)";
+      }).catch(err => {
+        console.log("Audio waiting for interaction / using fallback:", err);
+        // Fallback: If network or autoplay is blocked, start gentle melody on interaction
+        startFallbackSynthMelody();
+      });
+    }
+
+    // Bulletproof fallback: If external audio is unreachable/offline, synthesize a romantic melody
+    let synthMelodyInterval = null;
+    audio.addEventListener('error', () => {
+      console.log("Audio link offline/blocked, switching to synthesized romantic soundtrack.");
+      startFallbackSynthMelody();
+    }, true);
+
+    function startFallbackSynthMelody() {
+      if (synthMelodyInterval) return;
+      isPlaying = true;
+      musicWidget.classList.add('playing');
+      musicStatus.innerText = "🎶 Romantic Melody (Active)";
+      const melodyNotes = [523.25, 659.25, 783.99, 1046.5, 880, 783.99, 659.25];
+      let step = 0;
+      synthMelodyInterval = setInterval(() => {
+        if (!isPlaying) return;
+        try {
+          SFX.init();
+          const osc = SFX.ctx.createOscillator();
+          const gain = SFX.ctx.createGain();
+          osc.type = 'sine';
+          osc.frequency.setValueAtTime(melodyNotes[step % melodyNotes.length], SFX.ctx.currentTime);
+          gain.gain.setValueAtTime(0.08, SFX.ctx.currentTime);
+          gain.gain.exponentialRampToValueAtTime(0.001, SFX.ctx.currentTime + 1.2);
+          osc.connect(gain);
+          gain.connect(SFX.ctx.destination);
+          osc.start();
+          osc.stop(SFX.ctx.currentTime + 1.2);
+          step++;
+        } catch(e) {}
+      }, 500);
+    }
+
+    function pauseMusic() {
+      audio.pause();
+      if (synthMelodyInterval) {
+        clearInterval(synthMelodyInterval);
+        synthMelodyInterval = null;
+      }
+      isPlaying = false;
+      musicWidget.classList.remove('playing');
+      musicStatus.innerText = "🔇 Song Paused";
+    }
+
+    function toggleMusic() {
+      if (isPlaying) {
+        pauseMusic();
+      } else {
+        playMusic();
+      }
+    }
+
+    // Browsers require 1 click/touch before playing audio:
+    // Any click or touch anywhere on the page will seamlessly start the song!
+    function autoStartAudioOnInteraction() {
+      if (!isPlaying) {
+        playMusic();
+      }
+    }
+    window.addEventListener('click', autoStartAudioOnInteraction, { once: true });
+    window.addEventListener('touchstart', autoStartAudioOnInteraction, { once: true });
+
+    /* ========================================================
+       2. SYNTHESIZED SOUND EFFECTS ENGINE (Web Audio API)
+       ======================================================== */
+    const SFX = {
+      ctx: null,
+      init() {
+        if (!this.ctx) {
+          const AudioContext = window.AudioContext || window.webkitAudioContext;
+          this.ctx = new AudioContext();
+        }
+        if (this.ctx.state === 'suspended') this.ctx.resume();
+      },
+      // Cartoon Boing / Slip Sound
+      boing() {
+        try {
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'triangle';
+          
+          const now = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(160, now);
+          osc.frequency.exponentialRampToValueAtTime(750, now + 0.25);
+          
+          gain.gain.setValueAtTime(0.25, now);
+          gain.gain.exponentialRampToValueAtTime(0.01, now + 0.25);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.25);
+        } catch(e) {}
+      },
+      // Panic Alarm Beep
+      alarm() {
+        try {
+          this.init();
+          const osc = this.ctx.createOscillator();
+          const gain = this.ctx.createGain();
+          osc.type = 'sawtooth';
+          const now = this.ctx.currentTime;
+          osc.frequency.setValueAtTime(880, now);
+          osc.frequency.setValueAtTime(440, now + 0.1);
+          gain.gain.setValueAtTime(0.15, now);
+          gain.gain.linearRampToValueAtTime(0.01, now + 0.2);
+
+          osc.connect(gain);
+          gain.connect(this.ctx.destination);
+          osc.start(now);
+          osc.stop(now + 0.2);
+        } catch(e) {}
+      }
+    };
+
+    /* ========================================================
+       3. CURSOR HEART TRAILS
+       ======================================================== */
+    const heartSymbols = ['💖', '🔥', '✨', '💘', '🥰', '💥'];
+    window.addEventListener('mousemove', (e) => {
+      if (Math.random() > 0.65) {
+        createHeartTrail(e.clientX, e.clientY);
+      }
+    });
+    window.addEventListener('touchmove', (e) => {
+      const touch = e.touches[0];
+      createHeartTrail(touch.clientX, touch.clientY);
+    });
+
+    function createHeartTrail(x, y) {
+      const el = document.createElement('div');
+      el.className = 'heart-trail';
+      el.innerText = heartSymbols[Math.floor(Math.random() * heartSymbols.length)];
+      el.style.left = `${x}px`;
+      el.style.top = `${y}px`;
+      document.body.appendChild(el);
+      setTimeout(() => el.remove(), 1000);
+    }
+
+    /* ========================================================
+       4. THE CRAZY NO-BUTTON DODGE MECHANISM & TAKEOVER
+       ======================================================== */
+    const noBtn = document.getElementById('noBtn');
+    const yesBtn = document.getElementById('yesBtn');
+    const avatar = document.getElementById('avatarEmoji');
+    const toast = document.getElementById('roastToast');
+    const container = document.getElementById('mainContainer');
+    const meterFill = document.getElementById('meterFill');
+    const meterText = document.getElementById('meterText');
+
+    const roasts = [
+      "NO? Are you serious right now?! 😱",
+      "BRUH! Stop chasing the wrong button! 🏃‍♂️💨",
+      "Look at the YES button, it's getting hungrier! 🍔",
+      "ALERT: Rejection denied by firewall! 🛡️",
+      "I will literally delete the NO button! 💣",
+      "You are 100% stuck with me forever! 🔒",
+      "FINE! I'm removing your freedom of choice! 😂"
+    ];
+
+    const avatars = ['😳', '🥺', '😤', '😡', '😱', '🤪', '😈'];
+
+    let chaseCount = 0;
+    let yesScale = 1.0;
+
+    function showToast(text) {
+      toast.innerText = text;
+      toast.classList.add('active');
+      setTimeout(() => toast.classList.remove('active'), 2000);
+    }
+
+    function triggerScreenShake() {
+      document.body.classList.add('screen-shake');
+      setTimeout(() => document.body.classList.remove('screen-shake'), 400);
+    }
+
+    function runAway(e) {
+      if (e) e.preventDefault();
+      chaseCount++;
+
+      // Make sure romantic music is playing!
+      if (!isPlaying) playMusic();
+
+      // Trigger Sounds & Reactions
+      if (chaseCount > 3) {
+        SFX.alarm();
+        triggerScreenShake();
+      } else {
+        SFX.boing();
+      }
+
+      // Avatar Emotion Shift
+      avatar.innerText = avatars[Math.min(chaseCount, avatars.length - 1)];
+
+      // Overload the Love Meter
+      const meterPercent = 99 + (chaseCount * 150);
+      meterText.innerText = `LOVE OVERLOAD: ${meterPercent}% 🔥`;
+      meterFill.style.width = '100%';
+
+      // YES Button EXPANDS to take over the world!
+      yesScale += 0.22;
+      document.documentElement.style.setProperty('--yes-scale', yesScale);
+      yesBtn.style.transform = `scale(${yesScale})`;
+
+      // Show Funny Roast Toast
+      const roastText = roasts[Math.min(chaseCount - 1, roasts.length - 1)];
+      showToast(roastText);
+
+      // On 6th Chase: The NO Button Surrenders & Becomes YES!
+      if (chaseCount >= 6) {
+        noBtn.innerText = "OK FINE, YES! 🥰";
+        noBtn.style.background = "#00f0ff";
+        noBtn.style.color = "#000";
+        noBtn.style.fontWeight = "900";
+        noBtn.onclick = triggerCrazyCelebration;
+        noBtn.removeEventListener('mouseenter', runAway);
+        noBtn.removeEventListener('touchstart', runAway);
+        showToast("THE 'NO' BUTTON SURRENDERED! 🎉");
+        return;
+      }
+
+      // Calculate Wild Escape Position
+      const maxW = window.innerWidth < 500 ? 140 : 280;
+      const maxH = window.innerHeight < 500 ? 130 : 240;
+
+      const deltaX = (Math.random() - 0.5) * (maxW * 2);
+      const deltaY = (Math.random() - 0.5) * (maxH * 2);
+      const rotate = (Math.random() - 0.5) * 60;
+
+      noBtn.style.transform = `translate(${deltaX}px, ${deltaY}px) rotate(${rotate}deg)`;
+    }
+
+    noBtn.addEventListener('mouseenter', runAway);
+    noBtn.addEventListener('touchstart', runAway, { passive: false });
+    noBtn.addEventListener('click', runAway);
+
+    /* ========================================================
+       5. MEGA CELEBRATION (DISCO INFERNO)
+       ======================================================== */
+    function triggerCrazyCelebration() {
+      // Ensure Hindi romantic song is playing loud and proud!
+      if (!isPlaying) playMusic();
+      audio.volume = 1.0;
+
+      triggerScreenShake();
+
+      document.getElementById('askView').style.display = 'none';
+      const victoryView = document.getElementById('victoryView');
+      victoryView.style.display = 'block';
+
+      // Setup WhatsApp Instant Message
+      const waText = encodeURIComponent("🚨 IT'S OFFICIAL! I just clicked YES on your crazy proposal! 💍🥰 Let's start forever!");
+      document.getElementById('waSendBtn').href = `https://api.whatsapp.com/send?text=${waText}`;
+
+      // Start Official Live Love Timer
+      let secondsTogether = 0;
+      const timerEl = document.getElementById('loveTimer');
+      setInterval(() => {
+        secondsTogether++;
+        timerEl.innerHTML = `⏱️ Officially Mine For: <b>${secondsTogether}s</b> and counting! ❤️`;
+      }, 1000);
+
+      // MEGA CONFETTI EXPLOSION CANNON
+      megaConfettiBlast();
+    }
+
+    function megaConfettiBlast() {
+      const duration = 5 * 1000;
+      const animationEnd = Date.now() + duration;
+
+      const interval = setInterval(function() {
+        const timeLeft = animationEnd - Date.now();
+        if (timeLeft <= 0) {
+          return clearInterval(interval);
+        }
+
+        // Left and Right Cannons
+        confetti({
+          particleCount: 80,
+          angle: 60,
+          spread: 80,
+          origin: { x: 0, y: 0.8 },
+          colors: ['#ff007f', '#00f0ff', '#ffee00', '#ffffff']
+        });
+        confetti({
+          particleCount: 80,
+          angle: 120,
+          spread: 80,
+          origin: { x: 1, y: 0.8 },
+          colors: ['#ff007f', '#00f0ff', '#ffee00', '#ffffff']
+        });
+      }, 200);
+    }
+  </script>
+</body>
+</html>
